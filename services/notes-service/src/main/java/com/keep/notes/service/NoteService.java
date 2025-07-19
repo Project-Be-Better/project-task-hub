@@ -53,7 +53,7 @@ public class NoteService {
      * If the note exists, its fields are updated and saved
      * 
      * @param id          ID of the note to update
-     * @param updatedNote the new data to apply to the existing ntoe
+     * @param updatedNote the new data to apply to the existing note
      * @return updated note if found or null if the note does not exist
      */
     public Note updateNote(Long id, Note updatedNote) {
