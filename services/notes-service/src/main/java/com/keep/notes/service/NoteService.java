@@ -74,7 +74,7 @@ public class NoteService {
      * Deletes a note by ID
      * 
      * @param id the ID of the note to delete
-     * @return true if the note was found and deleted , false other wise
+     * @return true if the note was found and deleted , false otherwise
      */
     public boolean deleteNote(Long id) {
         return noteRepository.findById(id).map(
