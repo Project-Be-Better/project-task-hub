@@ -5,5 +5,5 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate # Ensures schema validation without automatic updates. Use migration tools like Flyway or Liquibase for schema changes.
     show-sql: true
