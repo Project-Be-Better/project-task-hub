@@ -10,7 +10,7 @@ import com.keep.notes.model.Note;
 import com.keep.notes.repository.NoteRepository;
 
 /**
- * Service layer foir handling business logic related to notes
+ * Service layer for handling business logic related to notes
  * Intermediate layer between controller and repository
  */
 @Service
