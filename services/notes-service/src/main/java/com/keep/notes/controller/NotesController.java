@@ -3,7 +3,7 @@ package com.keep.notes.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.keep.notes.model.Note;
-import com.keep.notes.storage.InMemoryNoteStore;
+import com.keep.notes.service.NoteService;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/notes")
 public class NotesController {
 
-    private final InMemoryNoteStore store;
+    private final NoteService noteService;
 
-    public NotesController(InMemoryNoteStore store) {
-        this.store = store;
+    public NotesController(NoteService noteService) {
+        this.noteService = noteService;
     }
 
     @GetMapping("/test")
@@ -34,12 +34,12 @@ public class NotesController {
 
     @GetMapping
     public List<Note> getAllNotes() {
-        return store.getAllNotes();
+        return noteService.getAllNotes();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Note> getNoteByIdEntity(@PathVariable Long id) {
-        return store.getNoteById(id)
+        return noteService.getNoteById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
