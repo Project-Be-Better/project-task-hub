@@ -2,6 +2,7 @@ package com.keep.notes.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.keep.notes.dto.NoteDTO;
 import com.keep.notes.model.Note;
 import com.keep.notes.service.NoteService;
 
@@ -121,6 +122,33 @@ public class NotesController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Converts a {@link Note} entity to a {@link NoteDTO} object.
+     *
+     * @param note the {@link Note} entity to convert
+     * @return a {@link NoteDTO} containing the id, title, and content from the
+     *         given note
+     */
+    private NoteDTO toNoteDto(Note note) {
+        return new NoteDTO(note.getId(), note.getTitle(), note.getContent());
+    }
+
+    /**
+     * Converts a {@link NoteDTO} object to a {@link Note} entity.
+     *
+     * @param dto the NoteDTO object containing note data
+     * @return a Note entity populated with data from the given NoteDTO
+     */
+    private Note toNoteEntity(NoteDTO dto) {
+        Note note = new Note();
+
+        note.setId(dto.getId());
+        note.setTitle(dto.getTitle());
+        note.setContent(dto.getContent());
+
+        return note;
     }
 
 }
