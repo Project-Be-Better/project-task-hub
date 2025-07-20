@@ -2,10 +2,15 @@ package com.keep.notes.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.keep.notes.dto.NoteDTO;
 import com.keep.notes.model.Note;
 import com.keep.notes.service.NoteService;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,8 +66,21 @@ public class NotesController {
      * @return a list of all notes
      */
     @GetMapping
-    public List<Note> getAllNotes() {
-        return noteService.getAllNotes();
+    public ResponseEntity<List<NoteDTO>> getAllNotes() {
+        try {
+            List<NoteDTO> noteDTOs = noteService.getAllNotes()
+                    .stream()
+                    .map(this::toNoteDto)
+                    .collect(Collectors.toList());
+
+            if (noteDTOs.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(noteDTOs);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
@@ -72,38 +90,55 @@ public class NotesController {
      * @return the note if found, otherwise 404
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Note> getNoteById(@PathVariable Long id) {
-        return noteService.getNoteById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<NoteDTO> getNoteById(@PathVariable Long id) {
+
+        try {
+            Optional<Note> noteOptional = noteService.getNoteById(id);
+            return noteOptional
+                    .map(note -> ResponseEntity.ok(toNoteDto(note))).orElse(ResponseEntity.notFound().build());
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
      * Create a new note.
      * 
-     * @param note the note to create
+     * @param noteDTO the note to create
      * @return the created note
      */
     @PostMapping
-    public ResponseEntity<Note> createNote(@RequestBody Note note) {
-        Note createdNote = noteService.createNote(note);
-        return ResponseEntity.ok(createdNote);
+    public ResponseEntity<NoteDTO> createNote(@Valid @RequestBody NoteDTO noteDTO) {
+        try {
+            Note createdNote = noteService.createNote(toNoteEntity(noteDTO));
+            return ResponseEntity.ok(toNoteDto(createdNote));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
      * Update an existing note by ID.
      * 
-     * @param id   the ID of the note to update
-     * @param note the updated note data
+     * @param id      the ID of the note to update
+     * @param noteDTO the updated note data
      * @return the updated note if found, otherwise 404
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody Note note) {
-        Note updatedNote = noteService.updateNote(id, note);
-        if (updatedNote != null) {
-            return ResponseEntity.ok(updatedNote);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<NoteDTO> updateNote(@PathVariable Long id, @Valid @RequestBody NoteDTO noteDTO) {
+
+        try {
+            Note updatedNote = noteService.updateNote(id, toNoteEntity(noteDTO));
+
+            if (updatedNote != null) {
+                return ResponseEntity.ok(toNoteDto(updatedNote));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -115,12 +150,43 @@ public class NotesController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
-        boolean deleted = noteService.deleteNote(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            boolean deleted = noteService.deleteNote(id);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
+    }
+
+    /**
+     * Converts a {@link Note} entity to a {@link NoteDTO} object.
+     *
+     * @param note the {@link Note} entity to convert
+     * @return a {@link NoteDTO} containing the id, title, and content from the
+     *         given note
+     */
+    private NoteDTO toNoteDto(Note note) {
+        return new NoteDTO(note.getId(), note.getTitle(), note.getContent());
+    }
+
+    /**
+     * Converts a {@link NoteDTO} object to a {@link Note} entity.
+     *
+     * @param dto the NoteDTO object containing note data
+     * @return a Note entity populated with data from the given NoteDTO
+     */
+    private Note toNoteEntity(NoteDTO dto) {
+        Note note = new Note();
+
+        note.setId(dto.getId());
+        note.setTitle(dto.getTitle());
+        note.setContent(dto.getContent());
+
+        return note;
     }
 
 }
