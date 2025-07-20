@@ -7,6 +7,7 @@ import com.keep.notes.model.Note;
 import com.keep.notes.service.NoteService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
@@ -87,10 +88,16 @@ public class NotesController {
      * @return the note if found, otherwise 404
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Note> getNoteById(@PathVariable Long id) {
-        return noteService.getNoteById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<NoteDTO> getNoteById(@PathVariable Long id) {
+
+        try {
+            Optional<Note> noteOptional = noteService.getNoteById(id);
+            return noteOptional
+                    .map(note -> ResponseEntity.ok(toNoteDto(note))).orElse(ResponseEntity.notFound().build());
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
