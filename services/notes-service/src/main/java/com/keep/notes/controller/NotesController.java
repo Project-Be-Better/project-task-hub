@@ -7,6 +7,7 @@ import com.keep.notes.model.Note;
 import com.keep.notes.service.NoteService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,8 +63,21 @@ public class NotesController {
      * @return a list of all notes
      */
     @GetMapping
-    public List<Note> getAllNotes() {
-        return noteService.getAllNotes();
+    public ResponseEntity<List<NoteDTO>> getAllNotes() {
+        try {
+            List<NoteDTO> noteDTOs = noteService.getAllNotes()
+                    .stream()
+                    .map(this::toNoteDto)
+                    .collect(Collectors.toList());
+
+            if (noteDTOs.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(noteDTOs);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
