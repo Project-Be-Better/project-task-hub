@@ -1,24 +1,17 @@
 version: "3.8"
 services:
-  notes-service:
-    build:
-      context: ./services/notes-service
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/keepdb
-      SPRING_DATASOURCE_USERNAME: keepuser
-      SPRING_DATASOURCE_PASSWORD: keeppass
-
   postgres:
-    image: postgres:15
+    image: postgres:16
+    container_name: notes_postgres
+    restart: always
     environment:
-      POSTGRES_USER: keepuser
-      POSTGRES_PASSWORD: keeppass
-      POSTGRES_DB: keepdb
+      POSTGRES_DB: notesdb
+      POSTGRES_USER: notesuser
+      POSTGRES_PASSWORD: notespass
     ports:
       - "5432:5432"
     volumes:
-      - ./infra/docker/postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
