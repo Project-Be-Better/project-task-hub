@@ -1,5 +1,6 @@
 package com.keep.notes.controller;
 
+import com.keep.notes.model.Note;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,15 +21,17 @@ public class NoteController {
     @GetMapping("/hello")
     public ResponseEntity<String> helloWorld() {
         return ResponseEntity.ok("Hello from the controller");
-    };
+    }
 
     @GetMapping
-    public ResponseEntity<List<String>> getAllNotes(){
+    public ResponseEntity<List<Note>> getAllNotes() {
         return ResponseEntity.ok(noteService.getAllNotes());
-    };
+    }
 
     @PostMapping
-    public ResponseEntity<String> createNote(@RequestBody String note){
-        return ResponseEntity.ok(noteService.addNote(note));
-    };
+    public ResponseEntity<Note> createNote(@RequestBody Note note) {
+        Note savedNote = noteService.createNote(note);
+        return ResponseEntity.status(201).body(savedNote);
+    }
+
 }
