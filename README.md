@@ -7,3 +7,9 @@ Navigate to the `docker-compose.yml` file
 ```bash
 docker-compose up -d
 ```
+
+
+## Services
+1. Note Service (Basic Done)
+2. Auth Service (Pending)
+3. Frontend (Pending)
