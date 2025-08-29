@@ -1,4 +1,4 @@
-name: Note Service
+name: Note Service Unit Tests
 
 on:
   push:
