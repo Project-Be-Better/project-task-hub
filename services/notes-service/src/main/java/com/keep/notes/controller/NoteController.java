@@ -9,21 +9,40 @@ import com.keep.notes.service.NoteService;
 
 import java.util.List;
 
+/**
+ * REST controller for managing notes.
+ * Provides endpoints for CRUD operations on notes.
+ */
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {
 
     private final NoteService noteService;
 
+    /**
+     * Constructs a new NoteController with the given NoteService.
+     *
+     * @param noteService the service to handle note operations
+     */
     public NoteController(NoteService noteService) {
         this.noteService = noteService;
     }
 
+    /**
+     * Simple health check endpoint.
+     *
+     * @return a greeting string
+     */
     @GetMapping("/hello")
     public ResponseEntity<String> helloWorld() {
         return ResponseEntity.ok("Hello from the controller");
     }
 
+    /**
+     * Retrieves all notes.
+     *
+     * @return a list of all notes wrapped in a ResponseEntity
+     */
     // ✅ DONE
     @GetMapping
     public ResponseEntity<List<NoteResponse>> getAllNotes() {
@@ -33,6 +52,12 @@ public class NoteController {
         return ResponseEntity.ok(noteService.getAllNotes());
     }
 
+    /**
+     * Retrieves a note by its ID.
+     *
+     * @param id the ID of the note to retrieve
+     * @return the note if found, or 404 if not found
+     */
     // ✅ DONE
     @GetMapping("/{id}")
     public ResponseEntity<NoteResponse> getNoteById(@PathVariable Long id) {
@@ -46,6 +71,12 @@ public class NoteController {
 
     }
 
+    /**
+     * Creates a new note.
+     *
+     * @param noteRequest the note data to create
+     * @return the created note with HTTP status 201
+     */
     // ✅ DONE
     @PostMapping
     public ResponseEntity<NoteResponse> createNote(@RequestBody NoteRequest noteRequest) {
@@ -58,6 +89,13 @@ public class NoteController {
         return ResponseEntity.status(201).body(savedNote);
     }
 
+    /**
+     * Updates an existing note by its ID.
+     *
+     * @param id          the ID of the note to update
+     * @param noteRequest the updated note data
+     * @return the updated note if found, or 404 if not found
+     */
     // ✅ DONE
     @PutMapping("/{id}")
     public ResponseEntity<NoteResponse> updateNote(@PathVariable Long id, @RequestBody NoteRequest noteRequest) {
@@ -70,6 +108,12 @@ public class NoteController {
 
     }
 
+    /**
+     * Deletes a note by its ID.
+     *
+     * @param id the ID of the note to delete
+     * @return 204 if deleted, or 404 if not found
+     */
     // ✅ DONE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
