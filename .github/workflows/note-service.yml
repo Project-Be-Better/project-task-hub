@@ -1,0 +1,63 @@
+name: Note Service CI
+
+on:
+  push:
+    branches:
+      - "feature/**"
+
+jobs:
+  # 1. Setup Environment
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+  # 2. Set up Java
+  setup-java:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 24
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "24"
+          cache: "maven"
+
+  # 3. Make mvnw executable
+  prepare-maven:
+    runs-on: ubuntu-latest
+    needs: setup-java
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Make mvnw executable
+        run: chmod +x services/note-service/mvnw
+
+  # 4. Run Unit Tests
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: prepare-maven
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 24
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "24"
+          cache: "maven"
+
+      - name: Make mvnw executable
+        run: chmod +x services/note-service/mvnw
+
+      - name: Run Unit Tests (Note Service)
+        run: |
+          cd services/note-service
+          ./mvnw -B clean test -U

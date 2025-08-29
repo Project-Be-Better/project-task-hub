@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.keep</groupId>
-	<artifactId>notes-service</artifactId>
+	<artifactId>note-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>notes-service</name>
+	<name>note-service</name>
 	<description>Spring Boot Notes Service</description>
 	<url/>
 	<licenses>
