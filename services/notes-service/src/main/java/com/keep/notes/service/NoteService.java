@@ -20,7 +20,7 @@ public class NoteService {
 
     // ✅ DONE
     public List<NoteResponse> getAllNotes() {
-        // 1. Find All Notes from respository
+        // 1. Find All Notes from repository
         // 2. Stream the list of notes
         // 3. For Each note, build a NoteResponse to be sent to the frontend
         // 4. Collect all response objects into a list
@@ -33,7 +33,7 @@ public class NoteService {
 
     // ✅ DONE
     public NoteResponse createNote(NoteRequest noteRequest) {
-        // 1. Create a new Note Enity Object (Starting empty)
+        // 1. Create a new Note Entity Object (Starting empty)
         // 2. Copy data from RequestDTO to the Note entity
         // 3. Save it using Repository(DAO)
         // 4. Generate a DTO with the saved entity

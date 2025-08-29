@@ -68,7 +68,6 @@ public class NoteController {
         // 4. If the Service returns Optional.empty, respond with
         // ResponseEntity.notFound
         return noteService.getNoteById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-
     }
 
     /**
