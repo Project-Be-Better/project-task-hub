@@ -21,4 +21,6 @@ jobs:
           cache: "maven"
 
       - name: Run Unit Tests (Note Service)
-        run: ./mvnw -B -f services/note-service/pom.xml test
+        run: |
+          cd services/note-service
+          ./mvnw -B test
