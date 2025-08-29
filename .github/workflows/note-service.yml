@@ -20,6 +20,9 @@ jobs:
           java-version: "24"
           cache: "maven"
 
+      - name: Make mvnw executable
+        run: chmod +x services/note-service/mvnw
+
       - name: Run Unit Tests (Note Service)
         run: |
           cd services/note-service
